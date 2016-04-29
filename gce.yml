@@ -1,0 +1,22 @@
+- name: Create instance(s)
+  hosts: localhost
+  connection: local
+  gather_facts: no
+
+  vars:
+    service_account_email: 103245743847-compute@developer.gserviceaccount.com
+    pem_file: /home/briochebcit/GRAnsible/gce_key.pem
+    project_id: team-brioche
+    machine_type: g1-small
+    image: ubuntu-1604-xenial-v20160429
+
+  tasks:
+
+   - name: Launch instances
+     gce:
+         instance_names: test-server-1
+         machine_type: "{{ machine_type }}"
+         image: "{{ image }}"
+         service_account_email: "{{ service_account_email }}"
+         pem_file: "{{ pem_file }}"
+         project_id: "{{ project_id }}"
