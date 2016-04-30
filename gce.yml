@@ -14,7 +14,7 @@
 
    - name: Launch instances
      gce:
-         instance_names: test-server-1
+         instance_names: test-server-1,test-server-2
          machine_type: "{{ machine_type }}"
          image: "{{ image }}"
          service_account_email: "{{ service_account_email }}"
@@ -33,6 +33,8 @@
 - name: Manage new instances
   hosts: test
   connection: ssh
-  sudo: True
+  become: true
   roles:
     - { role: geerlingguy.apache, tags: apache }
+    - { role: cooperworo.php, tags: php }
+    - { role: cooperworo.webserver, tags: webserver }
