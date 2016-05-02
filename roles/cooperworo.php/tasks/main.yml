@@ -1,0 +1,12 @@
+---
+ - name: Ensure apt is updated
+   apt: update_cache=yes
+ 
+ - name: Ensure php is installed
+   apt: pkg=php state=installed
+ 
+ - name: Ensure libapache2-mod-php is installed
+   apt: pkg=libapache2-mod-php state=installed
+
+ - name: Ensure php-mcrypt is installed
+   apt: pkg=php-mcrypt state=installed 

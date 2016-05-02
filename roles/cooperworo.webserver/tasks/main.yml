@@ -1,0 +1,16 @@
+---
+
+- name: Clone webapp to web server
+  git: repo=https://github.com/CooperWoro/HTML-Deploy.git
+       dest=/var/www/html/test/
+
+- name: Remove default index.html
+  file: path=/var/www/html/index.html state=absent
+
+- name: Check test.php exists
+  stat: path=/var/www/html/test/test.php
+  register: test_stat
+
+- name: Change test.php to be index.php
+  command: mv /var/www/html/test/test.php /var/www/html/index.php
+  when: test_stat.stat.exists

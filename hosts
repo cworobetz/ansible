@@ -1,0 +1,9 @@
+[webservers]
+web-server-1
+web-server-2
+
+[loadbalancers]
+lb-server-1
+
+[monitoring]
+munin-server-1
