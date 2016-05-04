@@ -9,13 +9,12 @@
     project_id: team-brioche
     machine_type: g1-small
     image: ubuntu-1604-xenial-v20160429
-    tags: webserver
-
+    tags: web-server
   tasks:
 
    - name: Launch instances
      gce:
-         instance_names: test-server-1,test-server-2
+         instance_names: "{{groups['webservers']}}"
          machine_type: "{{ machine_type }}"
          image: "{{ image }}"
          service_account_email: "{{ service_account_email }}"
@@ -23,20 +22,25 @@
          project_id: "{{ project_id }}"
          tags: "{{ tags }}"
      register: gce
-  
-   - name: Add host to groupname
-     add_host: hostname={{ item.public_ip }} groupname=test
-     with_items: "{{ gce.instance_data }}"
 
    - name: Wait for SSH to come up
      wait_for: host={{ item.public_ip }} port=22 delay=10 timeout=60
      with_items: "{{ gce.instance_data }}"
 
 - name: Manage new instances
-  hosts: test
+  hosts: webservers
   connection: ssh
   become: true
   roles:
     - { role: geerlingguy.apache, tags: apache }
     - { role: bcitbrioche.php, tags: php }
     - { role: bcitbrioche.webserver, tags: webserver }
+
+- name: Update HAProxy servers
+  hosts: lbservers
+  connection: ssh
+  become: true
+  roles:
+    - { role: bcitbrioche.loadbalancerconfig, tags: loadbalancer}
+
+
