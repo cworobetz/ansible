@@ -1,0 +1,46 @@
+global
+        log /dev/log    local0
+        log /dev/log    local1 notice
+        maxconn 2000
+        user haproxy
+        group haproxy
+        daemon
+
+defaults
+        log     global
+        mode    http
+        option  httplog
+        option  dontlognull
+        timeout connect 5000
+        timeout client  50000
+        timeout server  50000
+        errorfile 400 /etc/haproxy/errors/400.http
+        errorfile 403 /etc/haproxy/errors/403.http
+        errorfile 408 /etc/haproxy/errors/408.http
+        errorfile 500 /etc/haproxy/errors/500.http
+        errorfile 502 /etc/haproxy/errors/502.http
+        errorfile 503 /etc/haproxy/errors/503.http
+        errorfile 504 /etc/haproxy/errors/504.http
+
+resolvers dns
+        nameserver c.team-brioche.internal 169.254.169.254
+        hold valid 1s
+
+frontend font
+        bind *:80
+        mode http
+        default_backend back
+
+backend back
+        mode http
+        stats enable
+        stats show-legends
+        stats uri /haproxy?stats
+        stats auth stats:briocheisbestbread
+        stats refresh 5s
+        balance roundrobin
+        option httplog
+        option forwardfor
+        {% for webserver in groups['webservers'] %}
+        server site {{ webserver }}:80 resolvers dns check inter 1000
+        {% endfor %}
