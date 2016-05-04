@@ -1,0 +1,40 @@
+- name: Create instance(s)
+  hosts: localhost
+  #connection: local
+  gather_facts: no
+
+  vars:
+    service_account_email: 103245743847-compute@developer.gserviceaccount.com
+    pem_file: /home/briochebcit/GRAnsible/gce_key.pem
+    project_id: team-brioche
+    machine_type: g1-small
+    image: ubuntu-1604-xenial-v20160429
+
+  tasks:
+
+   - name: Launch instances
+     gce:
+         instance_names: test-server-1,test-server-2
+         machine_type: "{{ machine_type }}"
+         image: "{{ image }}"
+         service_account_email: "{{ service_account_email }}"
+         pem_file: "{{ pem_file }}"
+         project_id: "{{ project_id }}"
+     register: gce
+  
+   - name: Add host to groupname
+     add_host: hostname={{ item.public_ip }} groupname=test
+     with_items: "{{ gce.instance_data }}"
+
+   - name: Wait for SSH to come up
+     wait_for: host={{ item.public_ip }} port=22 delay=10 timeout=60
+     with_items: "{{ gce.instance_data }}"
+
+- name: Manage new instances
+  hosts: test
+  connection: ssh
+  become: true
+  roles:
+    - { role: geerlingguy.apache, tags: apache }
+    - { role: cooperworo.php, tags: php }
+    - { role: cooperworo.webserver, tags: webserver }

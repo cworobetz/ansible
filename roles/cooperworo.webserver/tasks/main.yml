@@ -1,0 +1,8 @@
+---
+
+- name: Remove default html folder
+  file: path=/var/www/html/ state=absent
+
+- name: Clone webapp to web server
+  git: repo=https://github.com/LiamWyattBCIT/html.git
+       dest=/var/www/
