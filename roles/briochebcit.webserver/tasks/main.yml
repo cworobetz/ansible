@@ -1,0 +1,20 @@
+---
+
+- name: Remove default html folder
+  file: path=/var/www/html/ state=absent
+
+- name: Clone webapp to web server
+  git: repo=https://github.com/LiamWyattBCIT/html
+       dest=/var/www/html
+
+- name: Update apt cache
+  apt: update_cache=yes
+
+- name: Install munin-node to monitor state
+  apt: pkg=munin-node state=installed
+
+- name: Copy in munin config file
+  copy: src=/etc/ansible/roles/briochebcit.webserver/files/munin-node.conf dest=/etc/munin/munin-node.conf owner=root group=root mode=0644
+
+- name: Restart munin node
+  service: name=munin-node state=restarted

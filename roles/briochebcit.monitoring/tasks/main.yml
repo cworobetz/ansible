@@ -1,0 +1,3 @@
+---
+ - name: Update Munin configuration
+   template: src=/etc/ansible/roles/briochebcit.monitoring/templates/munin.conf.j2 dest=/etc/munin/munin.conf owner=root group=root mode=0644

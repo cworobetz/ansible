@@ -1,6 +1,5 @@
 - name: Create instance(s)
   hosts: localhost
-  #connection: local
   gather_facts: no
 
   vars:
@@ -33,14 +32,20 @@
   become: true
   roles:
     - { role: geerlingguy.apache, tags: apache }
-    - { role: bcitbrioche.php, tags: php }
-    - { role: bcitbrioche.webserver, tags: webserver }
+    - { role: briochebcit.php, tags: php }
+    - { role: briochebcit.webserver, tags: webserver }
 
 - name: Update HAProxy servers
   hosts: lbservers
   connection: ssh
   become: true
   roles:
-    - { role: bcitbrioche.loadbalancerconfig, tags: loadbalancer}
+    - { role: briochebcit.loadbalancerconfig, tags: loadbalancer}
 
+- name: Update Munin servers
+  hosts: muninservers
+  connection: ssh
+  become: true
+  roles:
+    - { role: briochebcit.monitoring, tags: monitoring }
 

@@ -1,5 +1,5 @@
 [webservers]
-web-server-[01:02]
+web-server-[1:2]
 
 [lbservers]
 lb-server-1
