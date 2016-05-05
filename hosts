@@ -1,9 +1,8 @@
 [webservers]
-web-server-1
-web-server-2
+web-server-[01:02]
 
-[loadbalancers]
+[lbservers]
 lb-server-1
 
-[monitoring]
+[muninservers]
 munin-server-1
