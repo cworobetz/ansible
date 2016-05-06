@@ -1,0 +1,16 @@
+---
+
+- hosts: webservers
+  user: bcitbrioche
+  serial: 1
+
+pre_tasks:
+- name: disable the server in HAproxy
+- haproxy: state=disabled host={{ inventory_hostname }}
+  delegate_to: group['lbservers']
+
+tasks:
+- name: check if repo checkout exists
+- git: repo=ssh://git@github.com 
+
+
