@@ -5,6 +5,7 @@ global
         user haproxy
         group haproxy
         daemon
+	stats socket /var/lib/haproxy/stats.sock mode 660 level admin
 
 defaults
         log     global

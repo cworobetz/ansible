@@ -1,8 +1,13 @@
+[everything:children]
+webservers
+lbservers
+muninservers
+
 [webservers]
-web-server-[1:2]
+web-server-[1:3]
 
 [lbservers]
 lb-server-1
 
 [muninservers]
-munin-server-1
+munin-server-[1:2]

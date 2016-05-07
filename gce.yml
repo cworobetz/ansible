@@ -9,8 +9,6 @@
   connection: ssh
   become: true
   roles:
-    - { role: geerlingguy.apache, tags: apache }
-    - { role: briochebcit.php, tags: php }
     - { role: briochebcit.webserver, tags: webserver }
 
 - name: Update HAProxy servers
