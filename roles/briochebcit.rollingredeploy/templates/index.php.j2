@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body {
+    background-color:red;
+    color:white;
+}
+</style>
+</head>
+<body>
+<?php
+header('Content-type: text/html');
+echo "Backend Server IP: " . $_SERVER['SERVER_ADDR'];
+echo "<br/>Load Balancer IP: " . $_SERVER['REMOTE_ADDR'];
+echo "<br/>Your IP: " . $_SERVER['HTTP_X_FORWARDED_FOR'];
+echo "<br/>Version: {{ current_date.stdout }}"
+?>
+</body>
+</html>
