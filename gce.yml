@@ -1,48 +1,24 @@
-- name: Create instance(s)
+---
+- name: Create new instances
   hosts: localhost
-  gather_facts: no
+  roles:
+    - { role: briochebcit.instance, tags: instance }
 
-  vars:
-    service_account_email: 103245743847-compute@developer.gserviceaccount.com
-    pem_file: /etc/ansible/gce_key.pem
-    project_id: team-brioche
-    machine_type: g1-small
-    image: ubuntu-1604-xenial-v20160429
-    tags: web-server
-  tasks:
-
-   - name: Launch instances
-     gce:
-         instance_names: "{{groups['webservers']}}"
-         machine_type: "{{ machine_type }}"
-         image: "{{ image }}"
-         service_account_email: "{{ service_account_email }}"
-         pem_file: "{{ pem_file }}"
-         project_id: "{{ project_id }}"
-         tags: "{{ tags }}"
-     register: gce
-
-   - name: Wait for SSH to come up
-     wait_for: host={{ item.public_ip }} port=22 delay=10 timeout=60
-     with_items: "{{ gce.instance_data }}"
-
-- name: Manage new instances
+- name: Manage new webserver instances
   hosts: webservers
   connection: ssh
   become: true
   roles:
-    - { role: geerlingguy.apache, tags: apache }
-    - { role: briochebcit.php, tags: php }
     - { role: briochebcit.webserver, tags: webserver }
 
-- name: Update HAProxy servers
+- name: Manage new HAProxy servers
   hosts: lbservers
   connection: ssh
   become: true
   roles:
-    - { role: briochebcit.loadbalancerconfig, tags: loadbalancer}
+    - { role: briochebcit.loadbalancer, tags: loadbalancer}
 
-- name: Update Munin servers
+- name: Manage new Munin servers
   hosts: muninservers
   connection: ssh
   become: true
