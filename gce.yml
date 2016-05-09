@@ -4,21 +4,21 @@
   roles:
     - { role: briochebcit.instance, tags: instance }
 
-- name: Manage new instances
+- name: Manage new webserver instances
   hosts: webservers
   connection: ssh
   become: true
   roles:
     - { role: briochebcit.webserver, tags: webserver }
 
-- name: Update HAProxy servers
+- name: Manage new HAProxy servers
   hosts: lbservers
   connection: ssh
   become: true
   roles:
-    - { role: briochebcit.loadbalancerconfig, tags: loadbalancer}
+    - { role: briochebcit.loadbalancer, tags: loadbalancer}
 
-- name: Update Munin servers
+- name: Manage new Munin servers
   hosts: muninservers
   connection: ssh
   become: true
