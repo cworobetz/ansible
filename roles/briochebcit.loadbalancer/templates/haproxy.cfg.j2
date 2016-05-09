@@ -43,5 +43,5 @@ backend back
         option httplog
         option forwardfor
         {% for webserver in groups['webservers'] %}
-        server site {{ webserver }}:80 resolvers dns check inter 1000
+        server {{ webserver }} {{ webserver }}:80 resolvers dns check inter 1000
         {% endfor %}

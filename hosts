@@ -4,10 +4,10 @@ lbservers
 muninservers
 
 [webservers]
-web-server-[1:2]
+web-server-[1:5]
 
 [lbservers]
-lb-server-[1:2]
+lb-server-[1:1]
 
 [muninservers]
 munin-server-[1:1]
