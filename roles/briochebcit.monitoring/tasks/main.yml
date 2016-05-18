@@ -1,3 +1,24 @@
 ---
+ - name: Ensure apache2 is installed
+   apt: pkg=apache2 state=installed
+
+ - name: Ensure munin is installed
+   apt: pkg=munin state=installed
+
  - name: Update Munin configuration
    template: src=/etc/ansible/roles/briochebcit.monitoring/templates/munin.conf.j2 dest=/etc/munin/munin.conf owner=root group=root mode=0644
+
+ - name: Update munin's apache configuration
+   template: src=/etc/ansible/roles/briochebcit.monitoring/templates/apache.conf.j2  dest=/etc/munin/apache.conf owner=root group=root mode=0644
+
+ - name: Update munins's apache24 configuration
+   template: src=/etc/ansible/roles/briochebcit.monitoring/templates/apache24.conf.j2 dest=/etc/munin/apache24.conf owner=root group=root mode=0644
+ 
+ - name: Update apache2's configuration
+   template: src=/etc/ansible/roles/briochebcit.monitoring/templates/apache2.conf.j2 dest=/etc/apache2/apache2.conf owner=root group=root mode=0644
+
+ - name: Ensure directory for munin html files exists
+   file: path=/var/www/munin state=directory owner=munin group=munin mode=0755   
+
+ - name: Restart apache2 with new configuration
+   service: name=apache2 state=restarted

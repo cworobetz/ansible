@@ -1,0 +1,12 @@
+---
+- hosts: webservers
+  tasks:
+    - name: Get current date
+      shell: date
+      register: current_date
+      run_once: true
+- name: Rolling Redeploy 
+  hosts: webservers
+  serial: "60%"
+  roles:
+  - {role: briochebcit.rollingredeploy}
