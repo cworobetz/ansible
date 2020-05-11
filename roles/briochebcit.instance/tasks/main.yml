@@ -1,13 +1,12 @@
 ---
  - name: Launch instances
    gce:
-      instance_names: "{{ groups['webservers'] }}"
+      instance_names: "{{ groups['everything'] }}"
       machine_type: "{{ machine_type }}"
       image: "{{ image }}"
       service_account_email: "{{ service_account_email }}"
       pem_file: "{{ pem_file }}"
       project_id: "{{ project_id }}"
-      tags: "{{ tags }}"
    register: gce
 
  - name: Wait for SSH to come up

@@ -1,16 +1,32 @@
 ---
 
-- hosts: webservers
-  user: bcitbrioche
-  serial: 1
+- name: Rolling Redeploy 
+  hosts: webservers
+  serial: "60%"
 
-pre_tasks:
-- name: disable the server in HAproxy
-- haproxy: state=disabled host={{ inventory_hostname }}
-  delegate_to: group['lbservers']
+  tasks:
 
-tasks:
-- name: check if repo checkout exists
-- git: repo=ssh://git@github.com 
+   - name: disable the server in HAproxy
+     become: true
+     shell:   echo "disable server back/{{ inventory_hostname }}" | sudo socat stdio /var/lib/haproxy/stats.sock
+     delegate_to: "{{ item }}"
+     with_items: groups.lbservers
 
+   - name: check if repo checkout exists
+     git: repo=ssh://git@github.com:LiamWyattBCIT/html.git
+          dest=/var/www/html/
+          update=no
+          accept_hostkey=true
 
+   - name: checkout git repo & use refspec fetch all pull requests
+     become: true
+     git: repo=https://github.com/LiamWyattBCIT/html.git
+          dest=/var/www/html/ 
+          refspec=+refs/pull/*:refs/heads/*
+          force=yes
+
+   - name: enabling server in HAproxy
+     become: true
+     shell: echo "enable server back/{{ inventory_hostname }}" | socat stdio /var/lib/haproxy/stats.sock
+     delegate_to: "{{ item }}"
+     with_items: groups.lbservers
